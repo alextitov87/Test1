@@ -1,4 +1,5 @@
 #include "filedirdata.h"
+#include <windows.h>
 
 char* wstringToChar(const std::wstring wStr)
 {
@@ -25,14 +26,7 @@ std::string wstringToString(const std::wstring& wstr){
 }
 
 
-std::wstring stringToWstring_(const std::string &s)
-{
-    std::wstring wsTmp(s.begin(), s.end());
 
-   return wsTmp;
-
-
-}
 
 std::wstring toWS(uint32_t n)
 {

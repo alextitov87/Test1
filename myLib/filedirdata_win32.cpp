@@ -10,6 +10,15 @@ std::wstring stringToWstring(const std::string& str)
     return wstrTo;
 }
 
+std::wstring stringToWstring_(const std::string &s)
+{
+   wchar_t wstr[100];
+   int num = ::MultiByteToWideChar( 866, MB_PRECOMPOSED, s.c_str(), -1, wstr, sizeof(wstr)/sizeof(wstr[0]) );
+   std::wstring wsTmp(wstr);
+   return wsTmp;
+
+}
+
 void getRoot(std::vector<OneDirOrFileClass*>* dirs)
 {
   // qDebug()<<"getRoot-0";

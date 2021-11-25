@@ -28,6 +28,7 @@ std::vector<OneDirOrFileClass*>*  expandZipFile(OneDirOrFileClass* zipFile);
 std::string wstringToString(const std::wstring& wstr);
 
 std::wstring stringToWstring(const std::string& str);
+std::wstring stringToWstring_(const std::string &s);
 
 char* wstringToChar(const std::wstring wStr);
 

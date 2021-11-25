@@ -1,6 +1,14 @@
 #include <dirent.h>
 #include "filedirdata.h"
 
+std::wstring stringToWstring_(const std::string &s)
+{
+   std::wstring wsTmp(s.begin(), s.end());
+   return wsTmp;
+
+}
+
+
 std::wstring stringToWstring(const std::string& str)
 {
     std::string curLocale = setlocale(LC_ALL, "");
