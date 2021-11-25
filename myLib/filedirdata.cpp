@@ -1,20 +1,4 @@
-#include "../minizip/mz.h"
-#include "../minizip/mz_os.h"
-#include "../minizip/mz_strm.h"
-#include "../minizip/mz_strm_buf.h"
-#include "../minizip/mz_strm_split.h"
-#include "../minizip/mz_zip.h"
-#include "../minizip/mz_zip_rw.h"
-//#include "../minizip/some_lib.h"
-#include "onedirorfileclass.h"
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <cctype>
-#include <cstdlib>
-#include <QDebug>
-
+#include "filedirdata.h"
 
 char* wstringToChar(const std::wstring wStr)
 {

@@ -1,12 +1,6 @@
-#include <vector>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <cctype>
-#include <windows.h>
-#include "onedirorfileclass.h"
 #include "filedirdata.h"
-#include <QDebug>
+#include <windows.h>
+
 
 std::wstring stringToWstring(const std::string& str)
 {
@@ -49,7 +43,6 @@ std::vector<OneDirOrFileClass*>* expandDir(OneDirOrFileClass *currentDir)
     WIN32_FIND_DATA  fileData;
     HANDLE fileHandle;
     std::wstring currentDirPath=currentDir->getFullPath()+L"\\*";
-    qDebug()<<"currentDirPath="<<currentDirPath;
     fileHandle = FindFirstFileW(currentDirPath.c_str(), &fileData);
     if ( fileHandle != INVALID_HANDLE_VALUE )
     {

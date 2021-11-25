@@ -1,15 +1,5 @@
-#include <vector>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <cctype>
 #include <dirent.h>
-#include "onedirorfileclass.h"
 #include "filedirdata.h"
-#include <QDebug>
-#include <sys/stat.h>
-#include <ctime>
-#include <locale>
 
 std::wstring stringToWstring(const std::string& str)
 {

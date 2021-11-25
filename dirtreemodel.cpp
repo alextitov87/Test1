@@ -1,10 +1,5 @@
 #include "dirtreemodel.h"
-#include <vector>
-#include <QDir>
-#include <QIcon>
-#include "myLib/onedirorfileclass.h"
-#include "myLib/filedirdata.h"
-#include <QFileIconProvider>
+
 
 DirTreeModel::DirTreeModel(QObject *parent ):
     QAbstractItemModel(parent)
@@ -37,8 +32,7 @@ QModelIndex  DirTreeModel::parent(const QModelIndex &child) const
     OneDirOrFileClass* childInfo = static_cast<OneDirOrFileClass*>(child.internalPointer());
     OneDirOrFileClass* parentInfo = childInfo->getParent();
     if (parentInfo != 0) {
-        if(parentInfo->test!=10)
-            return QModelIndex();
+
         return createIndex(findRow(parentInfo), RamificationColumn, parentInfo);
     }
     else {

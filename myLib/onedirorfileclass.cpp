@@ -1,7 +1,4 @@
 #include "myLib/onedirorfileclass.h"
-#include <string>
-#include <vector>
-#include <QDebug>
 
 
 
@@ -20,8 +17,7 @@
     }
 
     OneDirOrFileClass::~OneDirOrFileClass()
-    {
-        //delete fullPath;
+    {       
         for (OneDirOrFileClass* elem :*children)
             delete elem;
         children->clear();
@@ -46,14 +42,10 @@
         return dateLastUpdate;
     }
 
-    void OneDirOrFileClass::setPath(std::wstring _path)
-    {
-        fullPath=_path;
-    }
+
 
     std::vector<OneDirOrFileClass*>* OneDirOrFileClass::getChildren() const
-    {
-        //qDebug() << "getChildren";
+    {        
         return  children;
     }
 
@@ -94,19 +86,7 @@
         return inspected;
     }
 
-    bool OneDirOrFileClass::operator ==(const OneDirOrFileClass& another) const //перегрузка оператора проверки на равенство
-    {
-        bool r = this->fullPath == another.fullPath; //текущий структура  равена сравниваемой
 
-        return r;
-    }
-
-    bool OneDirOrFileClass::operator ==(const OneDirOrFileClass* another) const //перегрузка оператора проверки на равенство
-    {
-        bool r = this->fullPath == another->fullPath; //текущий структура  равена сравниваемой
-
-        return r;
-    }
 
     DirObjectType OneDirOrFileClass::getType() const
     {
