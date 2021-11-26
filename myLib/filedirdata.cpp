@@ -1,5 +1,4 @@
 #include "filedirdata.h"
-#include <windows.h>
 
 char* wstringToChar(const std::wstring wStr)
 {
@@ -14,11 +13,8 @@ char* wstringToChar(const std::wstring wStr)
     #else
         std::wcstombs(buffer, input, size);
     #endif
-
     return buffer;
 }
-
-
 
 std::string wstringToString(const std::wstring& wstr){
     std::string str((const char*)&wstr[0], sizeof(wchar_t)/sizeof(char)*wstr.size());
