@@ -26,7 +26,7 @@ std::wstring stringToWstring(const std::string& str)
 void getRoot(std::vector<OneDirOrFileClass*>* dirs)
 {
 
-    qDebug() << "getRoot";
+   
     OneDirOrFileClass* root= new OneDirOrFileClass(L"/", ItIsDir, 0, nullptr);
     std::vector<OneDirOrFileClass*>* expandedRoot =  expandDir(root);
    for(int i=0; i<expandedRoot->size(); i++)
