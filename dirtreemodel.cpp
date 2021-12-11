@@ -74,17 +74,17 @@ QVariant  DirTreeModel::data(const QModelIndex &index, int role) const
         if(role==Qt::DecorationRole)
         {
             QFileIconProvider p;
-            if(oneDirOrFile->getType()==ItIsDir)
+            if(oneDirOrFile->getType() == ItIsDir || oneDirOrFile->getType() == ItIsZipInnerDir)
                 return p.icon(QFileIconProvider::Folder);
-            if(oneDirOrFile->getType()==ItIsDriver)
+            if(oneDirOrFile->getType() == ItIsDriver)
                 return p.icon(QFileIconProvider::Drive);
             return p.icon(QFileIconProvider::File);
         }
-        if(role==Qt::DisplayRole)
+        if(role == Qt::DisplayRole)
             return (QVariant) QString::fromWCharArray(oneDirOrFile->getShortName().c_str());
     case SizeColumn:
         if (role == Qt::DisplayRole) {
-            return oneDirOrFile->getType()==ItIsFile || oneDirOrFile->getType()==ItIsZipInnerFile ? QVariant(oneDirOrFile->getFileSize()): QVariant();         }
+            return oneDirOrFile->getType() == ItIsFile || oneDirOrFile->getType() == ItIsZipInnerFile ? QVariant(oneDirOrFile->getFileSize()): QVariant();         }
         break;
     case ModificationDateColumn:
         if (role == Qt::DisplayRole) {
@@ -99,9 +99,9 @@ QVariant  DirTreeModel::data(const QModelIndex &index, int role) const
         break;
     case TypeColumn:
         if (role == Qt::DisplayRole) {
-            if(oneDirOrFile->getType()==ItIsDir)
+            if(oneDirOrFile->getType() == ItIsDir)
                 return QVariant("<DIR>");
-            if(oneDirOrFile->getType()==ItIsZipFile)
+            if(oneDirOrFile->getType() == ItIsZipFile)
                 return QVariant("<ZIP>");
             return QVariant();
         }
@@ -137,11 +137,11 @@ void DirTreeModel::fetchMore(const QModelIndex &parent)
     OneDirOrFileClass* parentInfo = static_cast<OneDirOrFileClass*>(parent.internalPointer());
     Q_ASSERT(parentInfo != 0);
     Q_ASSERT(!parentInfo->isInspected());
-    if(parentInfo->getType()==ItIsDir || parentInfo->getType()==ItIsDriver)
+    if(parentInfo->getType() == ItIsDir || parentInfo->getType() == ItIsDriver)
         fetchSubDirs(parent);
-    if(parentInfo->getType()==ItIsZipFile)
+    if(parentInfo->getType() == ItIsZipFile)
         fetchZip(parent);
-    if(parentInfo->getType()==ItIsFile || parentInfo->getType()==ItIsZipInnerFile)
+    if(parentInfo->getType() == ItIsFile || parentInfo->getType() == ItIsZipInnerFile)
         {
             beginInsertRows(parent, 0, 0);
             parentInfo->setInspected(true);
@@ -152,12 +152,12 @@ void DirTreeModel::fetchMore(const QModelIndex &parent)
 void DirTreeModel::fetchSubDirs(const QModelIndex &parent)
 {
     OneDirOrFileClass* parentInfo = static_cast<OneDirOrFileClass*>(parent.internalPointer());
-    std::vector<OneDirOrFileClass*>* expandedDir=expandDir(parentInfo);
+    std::vector<OneDirOrFileClass*>* expandedDir = expandDir(parentInfo);
     int insrtCnt = expandedDir->size() -1;
     if (insrtCnt < 0) {
            insrtCnt = 0;
       }
-       std::vector<OneDirOrFileClass*>* currentChildren= parentInfo->getChildren();
+       std::vector<OneDirOrFileClass*>* currentChildren = parentInfo->getChildren();
        beginInsertRows(parent, 0, insrtCnt);
        parentInfo->getChildren()->reserve(expandedDir->size());
        for ( OneDirOrFileClass* entry: *expandedDir) {
@@ -171,20 +171,18 @@ void DirTreeModel::fetchSubDirs(const QModelIndex &parent)
 void DirTreeModel::fetchZip(const QModelIndex &parent)
 {
      OneDirOrFileClass* parentInfo = static_cast<OneDirOrFileClass*>(parent.internalPointer());
-     std::vector<OneDirOrFileClass*>* expandedZip=expandZipFile(parentInfo);
-     int insrtCnt=expandedZip->size() - 1;
-     if(insrtCnt<0)
-     {
-         insrtCnt=0;
-     }
-     std::vector<OneDirOrFileClass*>* currentChildren= parentInfo->getChildren();
-     beginInsertRows(parent, 0, insrtCnt);
-     parentInfo->getChildren()->reserve(expandedZip->size());
-     for (OneDirOrFileClass* subZip: *expandedZip)
-         currentChildren->insert(currentChildren->end(),subZip);
-     delete expandedZip;
-     parentInfo->setInspected(true);
-     endInsertRows();
+     parentInfo->getChildren()->clear();
+    int zipExpandResult =expandZipFile(parentInfo);
+      if (zipExpandResult != MZ_OK )
+      {
+          parentInfo->getChildren()->push_back(new OneDirOrFileClass(L"Ошибка чтения Zip архива, попробуйте еще раз",ItIsNotDiscover,0,parentInfo));
+          QMessageBox msgBox;
+          msgBox.setText("Произошла ошибка чтения Zip архива - ("+QString::number(zipExpandResult)+")");
+          msgBox.exec();
+
+      }
+      else
+          parentInfo->setInspected(true);
 }
 
 Qt::ItemFlags DirTreeModel::flags(const QModelIndex &index) const
@@ -197,7 +195,7 @@ bool DirTreeModel::hasChildren(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         const OneDirOrFileClass* parentInfo = static_cast<const OneDirOrFileClass*>(parent.internalPointer());
-        if(parentInfo->getType()==ItIsFile || parentInfo->getType()==ItIsZipInnerFile)
+        if(parentInfo->getType() == ItIsFile || parentInfo->getType() == ItIsZipInnerFile)
             return false;
         if (!parentInfo->isInspected()) {
             return true;

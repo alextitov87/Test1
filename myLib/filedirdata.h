@@ -23,14 +23,15 @@ void getRoot(std::vector<OneDirOrFileClass*>* dirs);
 
 std::vector<OneDirOrFileClass*>* expandDir(OneDirOrFileClass* currentDir);
 
-std::vector<OneDirOrFileClass*>*  expandZipFile(OneDirOrFileClass* zipFile);
+int  expandZipFile(OneDirOrFileClass* zipFile);
 
 std::string wstringToString(const std::wstring& wstr);
 
 std::wstring stringToWstring(const std::string& str);
 std::wstring stringToWstring_(const std::string &s);
 
-char* wstringToChar(const std::wstring wStr);
+
+char* wstringToChar(const std::wstring &wStr);
 
 
 

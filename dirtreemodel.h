@@ -8,6 +8,7 @@
 #include "myLib/onedirorfileclass.h"
 #include "myLib/filedirdata.h"
 #include <QFileIconProvider>
+#include <QMessageBox>
 
 enum Columns //перечисление колонок  TreeView
 {

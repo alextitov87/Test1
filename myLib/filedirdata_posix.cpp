@@ -23,6 +23,20 @@ std::wstring stringToWstring(const std::string& str)
     return result;
 }
 
+char* wstringToChar(const std::wstring &wStr)
+{
+    const wchar_t *input = wStr.c_str();
+    size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
+    char *buffer = new char[size];
+    #ifdef __STDC_LIB_EXT1__
+        size_t convertedSize;
+        std::wcstombs_s(&convertedSize, buffer, size, input, size);
+    #else
+        std::wcstombs(buffer, input, size);
+    #endif
+    return buffer;
+}
+
 void getRoot(std::vector<OneDirOrFileClass*>* dirs)
 {
 

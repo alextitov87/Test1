@@ -6,14 +6,11 @@
 
     OneDirOrFileClass::OneDirOrFileClass(std::wstring _name, DirObjectType dirObjectType,unsigned long long _fileSize, OneDirOrFileClass *_parent)
     {
-
-        shortName=_name;
-        type=dirObjectType;
-        parent=_parent;
-        fileSize=_fileSize;
-        fileSizeCompress=_fileSize;
-
-
+        shortName = _name;
+        type = dirObjectType;
+        parent = _parent;
+        fileSize = _fileSize;
+        fileSizeCompress = _fileSize;
     }
 
     OneDirOrFileClass::~OneDirOrFileClass()
@@ -25,9 +22,8 @@
 
     std::wstring OneDirOrFileClass::getFullPath() const
     {
-
-        if(parent!=nullptr)
-            return parent->getFullPath()+L"//"+shortName;
+        if(parent != nullptr)
+            return parent->getFullPath() + L"/" + shortName;
         return shortName;
 
     }
@@ -42,8 +38,6 @@
         return dateLastUpdate;
     }
 
-
-
     std::vector<OneDirOrFileClass*>* OneDirOrFileClass::getChildren() const
     {        
         return  children;
@@ -56,29 +50,32 @@
 
     void OneDirOrFileClass::clearParent()
     {
-        parent=nullptr;
+        parent = nullptr;
     }
 
     OneDirOrFileClass* OneDirOrFileClass::getParent() const
     {
-        //qDebug() << "getParent() parent=" << parent ;
-
-        return parent;
+       return parent;
     }
 
     void OneDirOrFileClass::setInspected(bool _inspected)
     {
-        inspected=_inspected;
+        inspected = _inspected;
     }
 
     void OneDirOrFileClass::setDateOfUpdate(std::wstring newDateUpdate)
     {
-        dateLastUpdate=newDateUpdate;
+        dateLastUpdate = newDateUpdate;
+    }
+
+    void OneDirOrFileClass::setUncompressedFileSize(long long uncompressed)
+    {
+        fileSize = uncompressed;
     }
 
     void OneDirOrFileClass::setCompressedFileSize(long long compressed)
     {
-        fileSizeCompress=compressed;
+        fileSizeCompress = compressed;
     }
 
     bool OneDirOrFileClass::isInspected() const
@@ -86,13 +83,10 @@
         return inspected;
     }
 
-
-
     DirObjectType OneDirOrFileClass::getType() const
     {
         return type;
     }
-
 
    unsigned long long OneDirOrFileClass::getFileSize() const
    {

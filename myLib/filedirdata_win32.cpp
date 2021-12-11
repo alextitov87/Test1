@@ -16,76 +16,80 @@ std::wstring stringToWstring_(const std::string &s)
    int num = ::MultiByteToWideChar( 866, MB_PRECOMPOSED, s.c_str(), -1, wstr, sizeof(wstr)/sizeof(wstr[0]) );
    std::wstring wsTmp(wstr);
    return wsTmp;
-
 }
 
-void getRoot(std::vector<OneDirOrFileClass*>* dirs)
+
+char* wstringToChar(const std::wstring &wstr)
 {
-  // qDebug()<<"getRoot-0";
+
+    if( wstr.empty() ) return new char[0];
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+    std::string strTo( size_needed, 0 );
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+     char *buffer = &strTo[0];
+    return buffer;
+}
+
+
+void getRoot(std::vector<OneDirOrFileClass*>* dirs)
+{  
     char buf[26];
-	std::vector<std::wstring>* devices=new std::vector<std::wstring>();
+    std::vector<std::wstring>* devices = new std::vector<std::wstring>();
     GetLogicalDriveStringsA(sizeof(buf),buf);
-    //qDebug()<<"getRoot-1";
-    for(char *s=buf; *s; s+=strlen(s)+1)
+    for(char *s = buf; *s; s += strlen(s) + 1)
 	{
         std::string buff_s(s);
-       // qDebug()<<"getRoot-2 "<<s2ws(buff_s);
-
+        buff_s[buff_s.length()-1] = '/';
         dirs->insert(dirs->end(),  new OneDirOrFileClass(stringToWstring(buff_s),ItIsDriver,0,nullptr));
 
-	}
-      
-     delete devices;
-
- 
+	}      
+     delete devices; 
 }
 
 std::wstring toWS(DWORD n)
 {
-    std::wstring num=std::to_wstring(n);
-    return num.length()<2 ? L"0"+num: num;
+    std::wstring num = std::to_wstring(n);
+    return num.length() < 2 ? L"0" + num: num;
 }
 
 std::vector<OneDirOrFileClass*>* expandDir(OneDirOrFileClass *currentDir)
 {
-    std::vector<OneDirOrFileClass*>* dirs=new std::vector<OneDirOrFileClass*>();
+    std::vector<OneDirOrFileClass*>* dirs = new std::vector<OneDirOrFileClass*>();
     WIN32_FIND_DATA  fileData;
     HANDLE fileHandle;
-    std::wstring currentDirPath=currentDir->getFullPath()+L"\\*";
+    std::wstring currentDirPath=currentDir->getFullPath() + L"/*";
     fileHandle = FindFirstFileW(currentDirPath.c_str(), &fileData);
     if ( fileHandle != INVALID_HANDLE_VALUE )
     {
         do
         {
-            DirObjectType currentObjectType=ItIsNotDiscover;
-            std::wstring currentObjectName=fileData.cFileName;
-            if(currentObjectName==L"." || currentObjectName==L"..")
+            DirObjectType currentObjectType = ItIsNotDiscover;
+            std::wstring currentObjectName = fileData.cFileName;
+            if(currentObjectName == L"." || currentObjectName == L"..")
                 continue;
-            std::wstring currentObjectExtencion=currentObjectName.substr(currentObjectName.find_last_of(L".") + 1);
+            std::wstring currentObjectExtencion = currentObjectName.substr(currentObjectName.find_last_of(L".") + 1);
             std::transform(currentObjectExtencion.begin(), currentObjectExtencion.end(), currentObjectExtencion.begin(),
                 []( wchar_t c){ return std::tolower(c); });
 
             if((fileData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)>0)
-                currentObjectType=ItIsDir;
-             else if (currentObjectExtencion==L"zip")
+                currentObjectType = ItIsDir;
+             else if (currentObjectExtencion == L"zip")
             {
                currentObjectType=ItIsZipFile;
             }
             else
-                currentObjectType=ItIsFile;
-            OneDirOrFileClass* newNode=new OneDirOrFileClass(currentObjectName, currentObjectType, (fileData.nFileSizeHigh * (MAXDWORD+1)) + fileData.nFileSizeLow ,currentDir);
+                currentObjectType = ItIsFile;
+            OneDirOrFileClass* newNode = new OneDirOrFileClass(currentObjectName, currentObjectType, (fileData.nFileSizeHigh * (MAXDWORD+1)) + fileData.nFileSizeLow ,currentDir);
             SYSTEMTIME newNodeTimeUpdate;
             FileTimeToSystemTime(&fileData.ftLastWriteTime,&newNodeTimeUpdate);
-            newNode->setDateOfUpdate(toWS(newNodeTimeUpdate.wDay)+L"/"+toWS(newNodeTimeUpdate.wMonth)
-                                     +L"/"+toWS(newNodeTimeUpdate.wYear)+L"  "+toWS(newNodeTimeUpdate.wHour)+L":"+
-                                     toWS(newNodeTimeUpdate.wMinute)+L":"+toWS(newNodeTimeUpdate.wSecond));
+            newNode->setDateOfUpdate(toWS(newNodeTimeUpdate.wDay) + L"/" + toWS(newNodeTimeUpdate.wMonth)
+                                     +L"/"+toWS(newNodeTimeUpdate.wYear) + L"  " + toWS(newNodeTimeUpdate.wHour) + L":" +
+                                     toWS(newNodeTimeUpdate.wMinute) + L":" + toWS(newNodeTimeUpdate.wSecond));
             dirs->insert(dirs->end(), newNode);
         } while( FindNextFileW(fileHandle, &fileData) );
         FindClose(fileHandle);
     }
-
     currentDir->setInspected(true);
-
     return dirs;
 
 }
