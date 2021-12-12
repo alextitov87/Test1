@@ -1,12 +1,29 @@
 #include <dirent.h>
 #include "filedirdata.h"
+#include <QDebug>
 
-std::wstring stringToWstring_(const std::string &s)
+
+
+
+
+
+
+std::string wstringToString(const std::wstring& wstr)
 {
-   std::wstring wsTmp(s.begin(), s.end());
-   return wsTmp;
 
+    const wchar_t *input = wstr.c_str();
+    size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
+    char *buffer = new char[size];
+    #ifdef __STDC_LIB_EXT1__
+        size_t convertedSize;
+        std::wcstombs_s(&convertedSize, buffer, size, input, size);
+    #else
+        std::wcstombs(buffer, input, size);
+    #endif
+      std::string str(buffer);
+    return str;
 }
+
 
 
 std::wstring stringToWstring(const std::string& str)
@@ -19,12 +36,80 @@ std::wstring stringToWstring(const std::string& str)
     mbstowcs(_Dest,_Source,_Dsize);
     std::wstring result = _Dest;
     delete []_Dest;
-    setlocale(LC_ALL, curLocale.c_str());
+    setlocale(LC_ALL, curLocale.c_str());    
     return result;
 }
 
+
+void analyzeString(const std::string &s)
+{
+    setlocale(LC_ALL, "Russian");
+    qDebug()<<s.c_str();
+    for(int i=0; i<s.length(); i++)
+    {
+        qDebug()<<static_cast< unsigned char>(s.at(i));
+    }
+    qDebug()<<"____________________";
+}
+
+
+void analyzeString(const std::wstring &s)
+{
+    setlocale(LC_ALL, "Russian");
+    qDebug()<<QString::fromStdWString(s);
+    for(int i=0; i<s.length(); i++)
+    {
+        qDebug()<<static_cast< unsigned char>(s.at(i));
+    }
+    qDebug()<<"____________________";
+}
+
+
+char* iso_latin_1_to_utf8(char* buffer, char* end, unsigned char c) {
+    if (c < 128) {
+        if (buffer == end) { throw std::runtime_error("out of space"); }
+        *buffer++ = c;
+    }
+    else {
+        if (end - buffer < 2) { throw std::runtime_error("out of space"); }
+        *buffer++ = 0xD0 | (c >> 6);
+        *buffer++ = 0x80 | (c & 0x3f);
+    }
+    return buffer;
+}
+
+std::string ANSItoUTF8(std::string str)
+{
+    std::string result="";
+    for(int i=0; i<str.length(); i++)
+    {
+        unsigned char code=static_cast< unsigned char>(str.at(i));
+        if (code<128)
+            result+=str.at(i);
+        else
+        {
+            result+=0xD0 ;//| (code >> 6);
+            result+=code;//0x80 | (code & 0x3f);
+
+        }
+    }
+    return result;
+}
+
+
+
+
+std::wstring stringToWstring_(const std::string &s)
+{
+
+    return stringToWstring(s);
+
+}
+
+
 char* wstringToChar(const std::wstring &wStr)
 {
+
     const wchar_t *input = wStr.c_str();
     size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
     char *buffer = new char[size];
@@ -68,8 +153,8 @@ std::vector<OneDirOrFileClass*>* expandDir(OneDirOrFileClass *currentDir)
 	while((entry = readdir(dp)))
 	{
         DirObjectType currentObjectType=ItIsNotDiscover;
-		std::string fileName(entry->d_name);
-        std::wstring currentObjectName=stringToWstring(fileName);
+        std::string fileName(entry->d_name);
+        std::wstring currentObjectName=stringToWstring(fileName);        
 		if(currentObjectName==L"." || currentObjectName==L"..")
 			continue;
 		std::wstring currentObjectExtencion=currentObjectName.substr(currentObjectName.find_last_of(L".") + 1);
