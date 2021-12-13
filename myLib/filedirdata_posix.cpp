@@ -1,6 +1,6 @@
 #include <dirent.h>
 #include "filedirdata.h"
-#include <QDebug>
+
 
 
 
@@ -41,28 +41,7 @@ std::wstring stringToWstring(const std::string& str)
 }
 
 
-void analyzeString(const std::string &s)
-{
-    setlocale(LC_ALL, "Russian");
-    qDebug()<<s.c_str();
-    for(int i=0; i<s.length(); i++)
-    {
-        qDebug()<<static_cast< unsigned char>(s.at(i));
-    }
-    qDebug()<<"____________________";
-}
 
-
-void analyzeString(const std::wstring &s)
-{
-    setlocale(LC_ALL, "Russian");
-    qDebug()<<QString::fromStdWString(s);
-    for(int i=0; i<s.length(); i++)
-    {
-        qDebug()<<static_cast< unsigned char>(s.at(i));
-    }
-    qDebug()<<"____________________";
-}
 
 
 char* iso_latin_1_to_utf8(char* buffer, char* end, unsigned char c) {
@@ -102,7 +81,11 @@ std::string ANSItoUTF8(std::string str)
 std::wstring stringToWstring_(const std::string &s)
 {
 
-    return stringToWstring(s);
+    if(RusTextRecoderClass::isHaveUTF8_rus(s))
+        return stringToWstring(s);
+    else
+        return stringToWstring(RusTextRecoderClass::ANSI866toUTF8(s));
+
 
 }
 

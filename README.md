@@ -15,6 +15,9 @@ myLib/filedata.cpp – содержит определение функцию  e
 myLib/filedirdata_win32.cpp – содержит определения функций  getRoot  и expandDir для windows
 myLib/filedirdata_posix.cpp – содержит определения функций  getRoot  и expandDir для unix
 
+myLib/rustextrecoderclass.h - заголовочный файл содержит объявление класса RusTextRecoderClass
+myLib/rustextrecoderclass.cpp - файл содержит определение методов класса RusTextRecoderClass
+
 dirtreemodel.h – заголовочный файл, содержит объявление класса DirTreeModel. Данный класс является классом реализацией древовидной модели данных для QTreeView
 dirtreemodel.cpp - файл содержит определение методов класса DirTreeModel
 

@@ -25,7 +25,6 @@ std::vector<std::wstring> splitPath(std::wstring path)
     while((pos = path.find(L"/",pos)) != std::wstring::npos)
     {
         pathNodes.push_back(path.substr(pos_before,pos - pos_before));
-        //qDebug()<<path.substr(pos_before,pos-pos_before);
         pos = pos + 1;
         pos_before = pos;
     }
@@ -88,6 +87,18 @@ OneDirOrFileClass* insertZipNode(OneDirOrFileClass* currentZipFile, std::wstring
     return nullptr;
 }
 
+std::string analyzeLine(std::string str)
+{
+    std::string result="";
+    std::string comma="";
+    for(int i=0; i<str.length(); i++)
+    {
+        result+=comma+std::to_string(static_cast<char>(str.at(i)));
+        comma=", ";
+    }
+    return result;
+}
+
 int expandZipFile(OneDirOrFileClass* zipFile)
 {
     mz_zip_file *file_info = NULL;
@@ -128,7 +139,6 @@ int expandZipFile(OneDirOrFileClass* zipFile)
                     zipNode->setUncompressedFileSize(file_info->uncompressed_size);
                     zipNode->setCompressedFileSize(file_info->compressed_size);
                     std::string filename(file_info->filename);
-                    //qDebug()<<file_info->filename<<"  "<<filename.length()<<" "<<file_info->filename_size<<"  "<<file_info->extrafield_size;
                }
         }
         err = mz_zip_reader_goto_next_entry(reader);

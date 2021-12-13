@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <ctime>
 #include <locale>
+#include "rustextrecoderclass.h"
 
 
 void getRoot(std::vector<OneDirOrFileClass*>* dirs);

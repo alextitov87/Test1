@@ -52,6 +52,8 @@ set(PROJECT_SOURCES
         myLib/filedirdata.h
         myLib/filedirdata.cpp
         myLib/filedirdata_win32.cpp
+        myLib/rustextrecoderclass.h
+        myLib/rustextrecoderclass.cpp
         minizip/mz_os_win32.cpp
 
 )
@@ -95,6 +97,8 @@ set(PROJECT_SOURCES
         myLib/filedirdata.h
         myLib/filedirdata.cpp
         myLib/filedirdata_posix.cpp
+        myLib/rustextrecoderclass.h
+        myLib/rustextrecoderclass.cpp
         minizip/mz_os_posix.cpp
 )
 ENDIF()

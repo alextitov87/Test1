@@ -12,10 +12,15 @@ std::wstring stringToWstring(const std::string& str)
 
 std::wstring stringToWstring_(const std::string &s)
 {
-   wchar_t wstr[100];
-   int num = ::MultiByteToWideChar( 866, MB_PRECOMPOSED, s.c_str(), -1, wstr, sizeof(wstr)/sizeof(wstr[0]) );
-   std::wstring wsTmp(wstr);
-   return wsTmp;
+    if(!RusTextRecoderClass::isHaveUTF8_rus(s))
+    {
+        wchar_t wstr[100];
+        int num = ::MultiByteToWideChar( 866, MB_PRECOMPOSED, s.c_str(), -1, wstr, sizeof(wstr)/sizeof(wstr[0]) );
+        std::wstring wsTmp(wstr);
+        return wsTmp;
+    }
+    else
+        return stringToWstring(s);
 }
 
 
