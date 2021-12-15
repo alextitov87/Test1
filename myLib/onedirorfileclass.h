@@ -2,6 +2,7 @@
 #define ONEDIRORFILECLASS_H
 #include <string>
 #include <vector>
+#include <QString>
 
 
 
@@ -25,6 +26,7 @@ class OneDirOrFileClass //класс один объект которого ас
     ~OneDirOrFileClass();
     std::wstring getFullPath() const;  //возвращает полный путь от корневого каталога
     std::wstring getShortName() const; //возвращает имя элемента файловой системы
+    QString getDisplayedName() const;
     std::wstring getDateUpdate() const;//возвращает время последней модификации элемента файловой системы ассоциированного с данным объектом
     std::vector<OneDirOrFileClass*>* getChildren() const;// указатель на вектор с указателями на дочерние объекты данного объекта файловой системы(подкаталоги)
     void addChildren(OneDirOrFileClass* _child);        //добовляет одного потомка
@@ -42,6 +44,7 @@ class OneDirOrFileClass //класс один объект которого ас
     unsigned long long getCompressedFileSize() const;   //возвращает сжатый размер элемента файловой системы ассоциированного с данным объектом, если элемент содержимое zip файла
   private:
     std::wstring shortName;                             //Имя элемента файловой системы ассоциированного с данным объектом
+    QString displayedName;
     std::wstring dateLastUpdate=L"";                    //время последней модификации элемента
     unsigned long long fileSize=0;                      //размер файла
     unsigned long long fileSizeCompress=0;              //размер сжатого файла

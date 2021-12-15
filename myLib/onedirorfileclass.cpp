@@ -7,6 +7,13 @@
     OneDirOrFileClass::OneDirOrFileClass(std::wstring _name, DirObjectType dirObjectType,unsigned long long _fileSize, OneDirOrFileClass *_parent)
     {
         shortName = _name;
+        if(shortName.length()<50)
+            displayedName=QString::fromWCharArray(shortName.c_str());
+        else
+        {
+            std::wstring str= shortName.substr(0,45)+L"..."+shortName.substr(shortName.length()-5,5);
+            displayedName=QString::fromWCharArray(str.c_str());
+        }
         type = dirObjectType;
         parent = _parent;
         fileSize = _fileSize;
@@ -31,6 +38,10 @@
     std::wstring OneDirOrFileClass::getShortName() const
     {
         return shortName;
+    }
+    QString OneDirOrFileClass::getDisplayedName() const
+    {
+        return displayedName;
     }
 
     std::wstring OneDirOrFileClass::getDateUpdate() const

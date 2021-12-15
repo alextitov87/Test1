@@ -81,7 +81,7 @@ QVariant  DirTreeModel::data(const QModelIndex &index, int role) const
             return p.icon(QFileIconProvider::File);
         }
         if(role == Qt::DisplayRole)
-            return (QVariant) QString::fromWCharArray(oneDirOrFile->getShortName().substr(0,50).c_str());
+            return oneDirOrFile->getDisplayedName();//(QVariant) QString::fromWCharArray(oneDirOrFile->getShortName().substr(0,50).c_str());
     case SizeColumn:
         if (role == Qt::DisplayRole) {
             return oneDirOrFile->getType() == ItIsFile || oneDirOrFile->getType() == ItIsZipInnerFile ? QVariant(oneDirOrFile->getFileSize()): QVariant();         }
@@ -143,9 +143,9 @@ void DirTreeModel::fetchMore(const QModelIndex &parent)
         fetchZip(parent);
     if(parentInfo->getType() == ItIsFile || parentInfo->getType() == ItIsZipInnerFile)
         {
-            beginInsertRows(parent, 0, 0);
-            parentInfo->setInspected(true);
-            endInsertRows();
+            //beginInsertRows(parent, 0, 0);
+            //parentInfo->setInspected(true);
+            //endInsertRows();
         }
 }
 
