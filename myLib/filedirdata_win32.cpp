@@ -14,7 +14,7 @@ std::wstring stringToWstring_(const std::string &s)
 {
     if(!RusTextRecoderClass::isHaveUTF8_rus(s))
     {
-        wchar_t wstr[100];
+        wchar_t wstr[1000];
         int num = ::MultiByteToWideChar( 866, MB_PRECOMPOSED, s.c_str(), -1, wstr, sizeof(wstr)/sizeof(wstr[0]) );
         std::wstring wsTmp(wstr);
         return wsTmp;

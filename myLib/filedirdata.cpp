@@ -1,7 +1,5 @@
 #include "filedirdata.h"
 
-
-
 std::wstring toWS(uint32_t n)
 {
     std::wstring num = std::to_wstring(static_cast<int>(n));
@@ -138,7 +136,6 @@ int expandZipFile(OneDirOrFileClass* zipFile)
                     zipNode->setDateOfUpdate(moddifedtime);
                     zipNode->setUncompressedFileSize(file_info->uncompressed_size);
                     zipNode->setCompressedFileSize(file_info->compressed_size);
-                    std::string filename(file_info->filename);
                }
         }
         err = mz_zip_reader_goto_next_entry(reader);

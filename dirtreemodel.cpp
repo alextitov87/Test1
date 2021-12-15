@@ -81,7 +81,11 @@ QVariant  DirTreeModel::data(const QModelIndex &index, int role) const
             return p.icon(QFileIconProvider::File);
         }
         if(role == Qt::DisplayRole)
-            return oneDirOrFile->getDisplayedName();//(QVariant) QString::fromWCharArray(oneDirOrFile->getShortName().substr(0,50).c_str());
+        {
+
+            return oneDirOrFile->getDisplayedName();
+
+        }
     case SizeColumn:
         if (role == Qt::DisplayRole) {
             return oneDirOrFile->getType() == ItIsFile || oneDirOrFile->getType() == ItIsZipInnerFile ? QVariant(oneDirOrFile->getFileSize()): QVariant();         }
