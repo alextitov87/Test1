@@ -82,9 +82,7 @@ QVariant  DirTreeModel::data(const QModelIndex &index, int role) const
         }
         if(role == Qt::DisplayRole)
         {
-
             return oneDirOrFile->getDisplayedName();
-
         }
     case SizeColumn:
         if (role == Qt::DisplayRole) {
